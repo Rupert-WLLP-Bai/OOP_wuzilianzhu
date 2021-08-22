@@ -36,6 +36,27 @@
     <ClInclude Include="main_visual.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource5.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource6.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="checkerboard.cpp">
@@ -50,19 +71,24 @@
     <ClCompile Include="path.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Visual_interface.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main_visual.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Visual_interface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image\9x9_board.jpg">
-      <Filter>资源文件\可视化</Filter>
+    <ResourceCompile Include="五子连珠.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\game.ico">
+      <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
 </Project>

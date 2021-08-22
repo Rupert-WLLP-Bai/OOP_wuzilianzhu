@@ -24,6 +24,13 @@
     <ClInclude Include="main_base.h" />
     <ClInclude Include="main_visual.h" />
     <ClInclude Include="path.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
+    <ClInclude Include="resource3.h" />
+    <ClInclude Include="resource4.h" />
+    <ClInclude Include="resource5.h" />
+    <ClInclude Include="resource6.h" />
     <ClInclude Include="Visual_interface.h" />
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +43,10 @@
     <ClCompile Include="Visual_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image\9x9_board.jpg" />
+    <ResourceCompile Include="五子连珠.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\game.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
