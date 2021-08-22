@@ -9,3 +9,34 @@
 
 */
 #include<graphics.h>
+#include"checkerboard.h"
+
+class board //棋盘类
+{
+public:
+	board();//用Checkerboard,width,height初始化board的参数
+	~board();
+
+private:
+	struct bead  //珠子
+	{
+		int x;
+		int y;
+		int r;
+		int color;
+	};
+	int height;
+	int width;
+	void draw_board();//画出棋盘
+	void draw_bead();//画珠子
+};
+
+board::board()
+{
+}
+
+board::~board()
+{
+}
+
+

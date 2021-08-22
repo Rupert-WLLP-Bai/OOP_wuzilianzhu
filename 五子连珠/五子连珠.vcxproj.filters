@@ -30,6 +30,12 @@
     <ClInclude Include="Visual_interface.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="main_base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="main_visual.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="checkerboard.cpp">
@@ -38,13 +44,19 @@
     <ClCompile Include="eliminate.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main_base.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="path.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Visual_interface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main_visual.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

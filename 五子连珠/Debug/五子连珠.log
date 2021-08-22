@@ -1,4 +1,5 @@
-﻿  main.cpp
+﻿  main_base.cpp
+  main_visual.cpp
   path.cpp
   正在生成代码...
   五子连珠.vcxproj -> F:\大作业\Debug\五子连珠.exe

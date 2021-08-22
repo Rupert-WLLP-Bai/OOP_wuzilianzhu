@@ -1,6 +1,6 @@
 #pragma once
 #include"checkerboard.h"
-#include<stack>
+#include<deque>
 #include<iostream>
 #include<iomanip>
 
@@ -20,7 +20,7 @@ public:
 	{
 		searchPath(m_tempPath, m_start, m_end,A);//调用私有函数
 	}
-	//打印最短路径走过的点
+	//打印最短路径走过的点(用另一端弹出)
 	bool printPath()
 	{
 		if (m_path.empty())
@@ -32,13 +32,14 @@ public:
 		}
 
 		cout << "最短路径如下: " << endl;
+		cout << "(" << m_start.m_x + 1 << "," << m_start.m_y + 1 << ")" << "——>" << 0 << endl;//起点
 		while (!m_path.empty())
 		{
-			cout << '(' << m_path.top().m_x+1 << ','
-				<< m_path.top().m_y+1 << ')' << "——>"
-				<< m_maze[m_path.top().m_x][m_path.top().m_y]-1
+			cout << '(' << m_path.front().m_x+1 << ','
+				<< m_path.front().m_y+1 << ')' << "——>"
+				<< m_maze[m_path.front().m_x][m_path.front().m_y]-1
 				<< endl;
-			m_path.pop();
+			m_path.pop_front();
 		}
 		system("pause");
 		return true;
@@ -72,7 +73,7 @@ private:
 		}
 	};
 
-	void searchPath(stack<Node>& path,
+	void searchPath(deque<Node>& path,
 		const Node& start, const Node& end, Checkerboard A)
 	{
 		if (start.m_x == end.m_x && start.m_y == end.m_y)  //走到终点
@@ -88,9 +89,9 @@ private:
 			if (isCanGo(start, nextNode))  //如果可以通过
 			{
 				m_maze[nextNode.m_x][nextNode.m_y] = m_maze[start.m_x][start.m_y] + 1;
-				path.push(nextNode);  //节点入栈
+				path.push_back(nextNode);  //节点入栈
 				searchPath(path, nextNode, end, A);  //递归查找
-				path.pop();    //弹出栈顶
+				path.pop_back();    //弹出栈顶
 			}
 		}
 	}
@@ -108,8 +109,9 @@ private:
 	}
 
 
-	stack<Node> m_path; //存储最短路径
-	stack<Node> m_tempPath; //存储临时路径
+	deque<Node> m_path; //存储最短路径
+	deque<Node> m_tempPath; //存储临时路径
+	deque<Node> copy_path;//最短路径备份
 	Node m_start;//起点
 	Node m_end;//终点
 	static Node offset[4];//四个方向偏移量
