@@ -3,8 +3,8 @@
 #include<stdlib.h>
 #include<Windows.h>
 #include"checkerboard.h"
-#define START_NUM 7
-#define COLOR_NUM 7
+#define START_NUM 40
+#define COLOR_NUM 2
 const int INF = 0x3f3f3f3f;
 using namespace std;
 typedef pair<int, int>P;

@@ -15,7 +15,8 @@ public:
 	void spawn(int a[9][9]);//初始化棋盘
 	int num_of_blank();//检查棋盘空白数
 	bool game_over();//检查游戏是否结束	 true:结束 false:继续
-	void fetch_instruction(int* location);//获取输入
+	void fetch_instruction(int* location);//键盘获取输入
+	void mouse_catching(int* location);//鼠标获取输入
 	int get_color(int x, int y);//获取棋子颜色
 	void move(int location[4],int *color_end,int *effect);//移动 需要返回的值为终点坐标 终点棋子颜色 是否完成移动
 	void add(int flag);//添加棋子

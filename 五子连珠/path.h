@@ -26,7 +26,9 @@ public:
 		if (m_path.empty())
 		{
 			cout << "无可行路径" << endl;
+			system("pause");
 			return false;
+
 		}
 
 		cout << "最短路径如下: " << endl;
@@ -38,6 +40,7 @@ public:
 				<< endl;
 			m_path.pop();
 		}
+		system("pause");
 		return true;
 	}
 	//打印遍历后的数组节点值

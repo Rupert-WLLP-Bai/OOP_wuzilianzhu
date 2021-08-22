@@ -23,7 +23,7 @@ int main()
 		{
 			break;
 		}
-		game.fetch_instruction(location);
+		game.fetch_instruction(location);//键盘输入
 		path_search route(location[0]-1,location[1]-1,location[2]-1,location[3]-1,game);//执行一次重新搜索路径
 		route.searchPath(game);
 		if (route.printPath())//可以移动

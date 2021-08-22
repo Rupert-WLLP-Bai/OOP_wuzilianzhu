@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="资源文件\可视化">
+      <UniqueIdentifier>{767d2712-1e8f-438a-bbf7-dbf8bdec0484}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="checkerboard.h">
@@ -22,6 +25,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="path.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Visual_interface.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,5 +44,13 @@
     <ClCompile Include="path.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Visual_interface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\9x9_board.jpg">
+      <Filter>资源文件\可视化</Filter>
+    </Image>
   </ItemGroup>
 </Project>
