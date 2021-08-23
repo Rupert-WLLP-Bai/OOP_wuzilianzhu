@@ -1,7 +1,7 @@
 /*可视化界面实现*/
 #include<graphics.h>
 #include"checkerboard.h"
-
+#include<string>
 class Visual_interface
 {
 public:
@@ -12,6 +12,9 @@ public:
 	void draw_root_window();
 	void draw_line();
 	void draw_button();
+	void draw_score();//显示分数
+	void mouse_catching();//读取鼠标事件
+	Checkerboard game;//game
 private:
 
 };
@@ -23,7 +26,7 @@ const int width_menu = 120;//右侧菜单栏宽度
 const int width = lattice_side_length * lattice_num + width_menu;
 const int height = lattice_side_length * lattice_num + height_score;
 const int r_bead = lattice_side_length / 2;//棋子半径为格子边长的一半
-static Checkerboard game;//静态全局game
+
 /*
 颜色
 #define	BLACK			0
@@ -57,9 +60,25 @@ inline void Visual_interface::draw_line()
 
 }
 
-inline void Visual_interface::draw_button()//画按钮
+inline void Visual_interface::draw_button()//画右侧按钮
 {
+	//退出按钮
+}
 
+inline void Visual_interface::draw_score()//得分框
+{
+	string text;//输出文字内容
+	string text1 = "Score: ";
+	string score = to_string(game.get_score());//score
+	text = text1 + score;
+	settextcolor(GREEN);//字体颜色
+	setbkmode(TRANSPARENT);//背景透明
+	settextstyle(20, 0, "DejaVu Sans Mono");//字体设置
+	outtextxy(0,height-height_score, text.data());
+}
+
+inline void Visual_interface::mouse_catching()
+{
 }
 
 inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标 
@@ -115,7 +134,7 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 	if (flag)
 	{
 		setfillcolor(RGB(r, g, b));
-		solidcircle(circle_x, circle_y, r_bead);
+		solidcircle(circle_x, circle_y, r_bead-1);
 	}
 }
 
@@ -133,10 +152,11 @@ inline void Visual_interface::draw_root_window()
 
 	initgraph(width, height);
 	HWND hwnd = GetHWnd();//获取窗口句柄
-	LPCWSTR title = TEXT("五子连珠");
+	const char* title = "五子连珠";
 	SetWindowText(hwnd, title);//修改窗口标题
 	IMAGE bk;//背景
-	loadimage(&bk, TEXT("image/bk.png"), width, height);
+	const char* bk_route = "image/bk.png";
+	loadimage(&bk, bk_route, width, height);
 	putimage(0, 0, &bk);
 	draw_line();//画出分隔线
 }

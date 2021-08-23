@@ -9,8 +9,15 @@ using namespace std;
 int main_visual()
 {
 	Visual_interface Window;
-	Window.draw_root_window();
-	Window.draw_board();
-	system("pause");
+	while (1)
+	{
+		Window.draw_root_window();
+		Window.draw_board();
+		Window.draw_score();
+		
+		
+		system("pause");
+		cleardevice();
+	}
 	return 0;
 }
