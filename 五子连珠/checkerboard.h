@@ -18,8 +18,11 @@ public:
 	void fetch_instruction(int* location);//键盘获取输入
 	int get_color(int x, int y);//获取棋子颜色
 	void move(int location[4],int *color_end,int *effect);//移动 需要返回的值为终点坐标 终点棋子颜色 是否完成移动
+	void move(int location[4]);
 	void add(int flag);//添加棋子
 	bool check_range(int x1, int y1,int x2,int y2);//检查初末位置合法性
+
+	int loc[4];//起始终止坐标
 private:
 	int a[9][9];	//用于储存棋盘内容
 	int score;

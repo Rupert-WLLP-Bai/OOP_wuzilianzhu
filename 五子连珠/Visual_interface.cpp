@@ -1,7 +1,12 @@
 /*可视化界面实现*/
+#pragma warning(disable : 4996)
 #include<graphics.h>
+#include<iostream>
 #include"checkerboard.h"
 #include<string>
+#include"path.h"
+using namespace std;
+
 class Visual_interface
 {
 public:
@@ -14,6 +19,7 @@ public:
 	void draw_button();
 	void draw_score();//显示分数
 	void mouse_catching();//读取鼠标事件
+	void search_path_and_move();//搜索路径 移动
 	Checkerboard game;//game
 private:
 
@@ -71,14 +77,112 @@ inline void Visual_interface::draw_score()//得分框
 	string text1 = "Score: ";
 	string score = to_string(game.get_score());//score
 	text = text1 + score;
-	settextcolor(GREEN);//字体颜色
+	settextcolor(RED);//字体颜色
 	setbkmode(TRANSPARENT);//背景透明
 	settextstyle(20, 0, "DejaVu Sans Mono");//字体设置
-	outtextxy(0,height-height_score, text.data());
+	outtextxy(0, height - height_score, text.data());
 }
 
 inline void Visual_interface::mouse_catching()
 {
+	MOUSEMSG m;//定义鼠标事件
+	m = GetMouseMsg();
+	int x, y;//坐标
+	int x1, y1;//起始 数组
+	int x2, y2;
+	const char* color[] = { "空白","红","橙" ,"黄","绿","青","蓝","紫" };
+	int flag1 = 0;//检测是否选择到有效的起始位置
+	int	flag2 = 0; // 检测是否选择到有效的终止位置
+
+	while (1)
+	{
+		if (MouseHit())//检测到鼠标事件
+		{
+			m = GetMouseMsg();
+			x = m.x / lattice_side_length + 1;
+			y = m.y / lattice_side_length + 1;
+			x1 = y; y1 = x;
+			switch (m.uMsg)
+			{
+			case WM_LBUTTONDOWN: //按下左键
+				cout << "已选择起始棋子" << endl;
+				cout << "鼠标坐标为: (" << m.x << "," << m.y << ")" << endl;
+				cout << "选择的棋子坐标为: (" << x << "," << y << ")" << endl;
+				cout << "选择的棋子颜色为: (" << color[game.get_color(x1, y1)] << ")" << endl;
+				if (x1 <= 9 && y1 <= 9 && color[game.get_color(x1, y1)] != "空白")
+				{
+					game.loc[0] = x1; game.loc[1] = y1;
+					flag1 = 1;
+					break;
+				}
+				else
+				{
+					cout << "起始位置无效,重新选择" << endl;
+					break;
+				}
+			default:
+				cout << "other" << endl;
+				break;
+			}
+		}
+		if (flag1)
+			break;
+	}
+
+
+	cout << "选择终止位置: " << endl;
+re:
+	MOUSEMSG m2 = GetMouseMsg();
+	if (MouseHit())//检测到鼠标事件
+	{
+		m2 = GetMouseMsg();
+		x = m2.x / lattice_side_length + 1;
+		y = m2.y / lattice_side_length + 1;
+		x2 = y; y2 = x;
+		switch (m2.uMsg)
+		{
+		case WM_LBUTTONDOWN: //按下左键
+			cout << "已选择终止位置" << endl;
+			cout << "鼠标坐标为: (" << m2.x << "," << m2.y << ")" << endl;
+			cout << "终止位置坐标为: (" << x << "," << y << ")" << endl;
+			cout << "终止位置颜色为: (" << color[game.get_color(x2, y2)] << ")" << endl;
+			if (x2 <= 9 && y2 <= 9 && color[game.get_color(x2, y2)] == "空白")
+			{
+				game.loc[2] = x2; game.loc[3] = y2;
+				flag2 = 1;
+				break;
+			}
+			else
+			{
+				cout << "终止位置无效,回到选择起始棋子" << endl;
+				break;
+			}
+		default:
+			cout << "other" << endl;
+			flag2 = -1;
+			break;
+		}
+	}
+	if (flag1 == 1 && flag2 == 1)
+	{
+		cout << "执行移动函数" << endl;
+		game.move(game.loc);
+	}
+	if (flag2 == -1)
+		goto re;
+}
+
+
+
+
+inline void Visual_interface::search_path_and_move()
+{
+
+
+
+
+
+
 }
 
 inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标 
@@ -123,7 +227,7 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 		b = 255;
 		break;
 	case 7:
-		r = 255;//紫色
+		r = 128;//紫色
 		g = 0;
 		b = 255;
 		break;
@@ -134,7 +238,7 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 	if (flag)
 	{
 		setfillcolor(RGB(r, g, b));
-		solidcircle(circle_x, circle_y, r_bead-1);
+		solidcircle(circle_x, circle_y, r_bead - 1);
 	}
 }
 
@@ -149,8 +253,6 @@ inline void Visual_interface::draw_board()
 
 inline void Visual_interface::draw_root_window()
 {
-
-	initgraph(width, height);
 	HWND hwnd = GetHWnd();//获取窗口句柄
 	const char* title = "五子连珠";
 	SetWindowText(hwnd, title);//修改窗口标题

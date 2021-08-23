@@ -153,6 +153,12 @@ void Checkerboard::move(int location[4],int* color_end, int* effect)
 		*effect = 1;
 }
 
+void Checkerboard::move(int location[4])
+{
+	a[location[2] - 1][location[3] - 1] = a[location[0] - 1][location[1] - 1];
+	a[location[0] - 1][location[1] - 1] = 0;
+}
+
 void Checkerboard::add(int flag)
 {
 	if (flag == 1)
