@@ -3,61 +3,11 @@
 #include<deque>
 #include<iostream>
 #include<iomanip>
+//定义节点
 
 class path_search
 {
 public:
-	//成员变量初始化
-	path_search(int start_x, int start_y, int end_x, int end_y,Checkerboard A)
-		:m_start(Node(start_x, start_y)), m_end(Node(end_x, end_y))
-	{
-		maze_spawn(A);
-		m_maze[start_x][start_y] = 1;  //迷宫入口初始化为1，避免重复走
-	}
-	~path_search();
-	//查找最短路径
-	void searchPath(Checkerboard A)
-	{
-		searchPath(m_tempPath, m_start, m_end,A);//调用私有函数
-	}
-	//打印最短路径走过的点(用另一端弹出)
-	bool printPath()
-	{
-		if (m_path.empty())
-		{
-			cout << "无可行路径" << endl;
-			system("pause");
-			return false;
-
-		}
-
-		cout << "最短路径如下: " << endl;
-		cout << "(" << m_start.m_x + 1 << "," << m_start.m_y + 1 << ")" << "——>" << 0 << endl;//起点
-		while (!m_path.empty())
-		{
-			cout << '(' << m_path.front().m_x+1 << ','
-				<< m_path.front().m_y+1 << ')' << "——>"
-				<< m_maze[m_path.front().m_x][m_path.front().m_y]-1
-				<< endl;
-			m_path.pop_front();
-		}
-		system("pause");
-		return true;
-	}
-	//打印遍历后的数组节点值
-	void printMaze()const
-	{
-		for (size_t i = 0; i < 9; ++i)
-		{
-			for (size_t j = 0; j < 9; ++j)
-			{
-				cout << setw(2) << m_maze[i][j] << ',';
-			}
-			cout << '\b' << endl;
-		}
-	}
-private:
-	//定义节点
 	class Node
 	{
 	public:
@@ -72,6 +22,66 @@ private:
 			return node;
 		}
 	};
+	//成员变量初始化
+	path_search(int start_x, int start_y, int end_x, int end_y, Checkerboard A)
+		:m_start(Node(start_x, start_y)), m_end(Node(end_x, end_y))
+	{
+		maze_spawn(A);
+		m_maze[start_x][start_y] = 1;  //迷宫入口初始化为1，避免重复走
+	}
+	~path_search();
+	//查找最短路径
+	void searchPath(Checkerboard A)
+	{
+		searchPath(m_tempPath, m_start, m_end, A);//调用私有函数
+	}
+	//打印最短路径走过的点(用另一端弹出)
+	bool printPath()
+	{
+		if (m_path.empty())
+		{
+			cout << "无可行路径" << endl;
+			return false;
+
+		}
+
+		cout << "最短路径如下: " << endl;
+		cout << "(" << m_start.m_x + 1 << "," << m_start.m_y + 1 << ")" << "——>" << 0 << endl;//起点
+		while (!m_path.empty())
+		{
+			cout << '(' << m_path.front().m_x + 1 << ','
+				<< m_path.front().m_y + 1 << ')' << "——>"
+				<< m_maze[m_path.front().m_x][m_path.front().m_y] - 1
+				<< endl;
+			m_path.pop_front();
+		}
+
+		return true;
+	}
+	//打印遍历后的数组节点值
+	void printMaze()const
+	{
+		for (size_t i = 0; i < 9; ++i)
+		{
+			for (size_t j = 0; j < 9; ++j)
+			{
+				cout << setw(2) << m_maze[i][j] << ',';
+			}
+			cout << '\b' << endl;
+		}
+	}
+	bool m_path_empty()
+	{
+		if (m_path.empty())
+			return true;
+		else
+			return false;
+	}
+
+	deque<Node> m_path; //存储最短路径
+
+private:
+
 
 	void searchPath(deque<Node>& path,
 		const Node& start, const Node& end, Checkerboard A)
@@ -109,7 +119,6 @@ private:
 	}
 
 
-	deque<Node> m_path; //存储最短路径
 	deque<Node> m_tempPath; //存储临时路径
 	deque<Node> copy_path;//最短路径备份
 	Node m_start;//起点

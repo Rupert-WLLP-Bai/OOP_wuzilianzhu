@@ -78,7 +78,7 @@ int Checkerboard::num_of_blank()
 bool Checkerboard::game_over()
 {
 	int num = num_of_blank();
-	if (num <= 3)
+	if (num <=3)
 		return true;
 	else
 		return false;
@@ -165,26 +165,20 @@ void Checkerboard::add(int flag)
 		return;
 	srand((unsigned int)time(0));
 	int x, y;//坐标
-	int newpoint[3][3];//储存三个新坐标信息	
 	int i = 0;
 	while (i < 3)
 	{
+		if (num_of_blank() == 0)
+			return;
 		x = rand() % 9;
 		y = rand() % 9;
 		if (a[x][y] == 0)
 		{
-			newpoint[0][i] = x;
-			newpoint[1][i] = y;
-			newpoint[2][i] = rand() % COLOR_NUM + 1;
+			a[x][y] = rand() % COLOR_NUM + 1;
 			i++;
 		}
 		else
 			continue;
-	}
-
-	for (int i = 0; i < 3; i++)	//赋值
-	{
-		a[newpoint[0][i]][newpoint[1][i]] = newpoint[2][i];
 	}
 }
 

@@ -29,6 +29,7 @@ int main_base()
 		if (route.printPath())//ø…“‘“∆∂Ø
 		{
 			game.move(location, &color_end, &effect);
+			system("pause");
 		}
 		else
 			effect = 0;

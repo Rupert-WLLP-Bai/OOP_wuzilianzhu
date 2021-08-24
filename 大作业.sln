@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "五子连珠", "五子连珠\五子连珠.vcxproj", "{D951E338-F394-47DD-B28E-6AEEE7234D5C}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{DDD6DE81-56DA-450E-AEDC-66F4348B301F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,6 +28,13 @@ Global
 		{D951E338-F394-47DD-B28E-6AEEE7234D5C}.五子连珠|x64.ActiveCfg = Release|x64
 		{D951E338-F394-47DD-B28E-6AEEE7234D5C}.五子连珠|x86.ActiveCfg = Release|Win32
 		{D951E338-F394-47DD-B28E-6AEEE7234D5C}.五子连珠|x86.Build.0 = Release|Win32
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.Debug|x64.ActiveCfg = Debug
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.Debug|x86.ActiveCfg = Debug
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.Release|x64.ActiveCfg = Release
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.Release|x86.ActiveCfg = Release
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.Release|x86.Build.0 = Release
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.五子连珠|x64.ActiveCfg = Debug
+		{DDD6DE81-56DA-450E-AEDC-66F4348B301F}.五子连珠|x86.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

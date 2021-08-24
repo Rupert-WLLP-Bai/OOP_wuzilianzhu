@@ -31,6 +31,7 @@
     <ClInclude Include="resource4.h" />
     <ClInclude Include="resource5.h" />
     <ClInclude Include="resource6.h" />
+    <ClInclude Include="resource7.h" />
     <ClInclude Include="Visual_interface.h" />
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +47,10 @@
     <ResourceCompile Include="五子连珠.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="image\game.ico" />
+    <Image Include="game.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

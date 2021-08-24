@@ -2,9 +2,14 @@
 #pragma warning(disable : 4996)
 #include<graphics.h>
 #include<iostream>
+#include<deque>
 #include"checkerboard.h"
 #include<string>
 #include"path.h"
+#include"eliminate.h"
+#include<iomanip>
+
+#define SLEEPTIME 0
 using namespace std;
 
 class Visual_interface
@@ -19,7 +24,9 @@ public:
 	void draw_button();
 	void draw_score();//显示分数
 	void mouse_catching();//读取鼠标事件
-	void search_path_and_move();//搜索路径 移动
+	bool search_path_and_move();//搜索路径 移动
+	void elinimate_and_score();
+	void game_over();
 	Checkerboard game;//game
 private:
 
@@ -190,7 +197,6 @@ inline void Visual_interface::mouse_catching()
 		if (flag1 == 1 && flag2 == 1)
 		{
 			cout << "执行移动函数" << endl;
-			game.move(game.loc);
 			return;
 		}
 		if (flag2 == 0)
@@ -203,14 +209,78 @@ inline void Visual_interface::mouse_catching()
 
 
 
-inline void Visual_interface::search_path_and_move()
+inline bool Visual_interface::search_path_and_move()
 {
+	path_search route(game.loc[0] - 1, game.loc[1] - 1, game.loc[2] - 1, game.loc[3] - 1, game);
+	route.searchPath(game);
+	if (route.m_path_empty())//路径不可行
+	{
+		cout << "无可行路径" << endl;
+		return false;
+	}
+	else
+	{
+		int num = 0;
+		path_search::Node start, end;//起始节点
+		start.m_x = game.loc[0]; start.m_y = game.loc[1];
+		end = route.m_path.front()+path_search::Node(1,1);
+		int location[4] = { start.m_x,start.m_y,end.m_x,end.m_y };
+		route.m_path.pop_front();
+		game.move(location);
+		BeginBatchDraw();//防止回车时出现闪屏
+		draw_root_window();
+		draw_board();
+		draw_score();
+		FlushBatchDraw();
+		Sleep(SLEEPTIME);
+		cleardevice();
+		cout << "Moves: " << setw(2)<<++num <<" " << '(' << start.m_y << ','
+			<< start.m_x << ')' << "——>" << '(' << end.m_y << ','
+			<< end.m_x << ')' << endl;
+		// path每pop一次，更换一次起点终点，执行move，延时后重新画棋盘，直到path为空
+		while (!route.m_path.empty())//deque
+		{
+			start = end;
+			end = route.m_path.front() + path_search::Node(1, 1);
+			route.m_path.pop_front();
+			int location[4] = { start.m_x,start.m_y,end.m_x,end.m_y };
+			game.move(location);
+			BeginBatchDraw();//防止回车时出现闪屏
+			draw_root_window();
+			draw_board();
+			draw_score();
+			FlushBatchDraw();
+			Sleep(SLEEPTIME);
+			cleardevice();
 
+			cout << "Moves: " << setw(2) << ++num << " " << '(' << start.m_y << ','
+				<< start.m_x << ')' << "——>" << '(' << end.m_y << ','
+				<< end.m_x << ')' << endl;
+		}
+		////一次移动
+		//route.printPath();
+		//game.move(game.loc);
+		return true;
+	}
+}
 
+inline void Visual_interface::elinimate_and_score()
+{
+	int flag = eliminate(&game, game.loc[2], game.loc[3]);//消去并加分
+	game.add(flag);
+}
 
-
-
-
+inline void Visual_interface::game_over()
+{
+	if (game.num_of_blank()==0)//flag==1 表示未消除 需要添加棋子 添加之前进行判断
+	{
+		int ok = MessageBox(GetHWnd(), "游戏结束,点击按钮退出游戏", "Oops", MB_OK);
+		if (ok == IDOK)
+		{
+			cleardevice();
+			exit(-2);
+		}
+	}
 }
 
 inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标 
@@ -219,45 +289,31 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 	int flag = 1;
 	HWND hwnd;
 	hwnd = GetHWnd();
-	int r, g, b;//棋子颜色
+	float H, S=1, V=1;//棋子颜色
 	const int circle_y = x * lattice_side_length - r_bead;
 	const int circle_x = y * lattice_side_length - r_bead;//圆心坐标
 	switch (game.get_color(x, y))//获取棋子颜色
 	{
 	case 1:
-		r = 255;//红色
-		g = 0;
-		b = 0;
+		H=0;//红色
 		break;
 	case 2:
-		r = 255;//橙色
-		g = 128;
-		b = 0;
+		H=30;//橙色
 		break;
 	case 3:
-		r = 255;//黄色
-		g = 255;
-		b = 0;
+		H=60;//黄色
 		break;
 	case 4:
-		r = 0;//绿色
-		g = 255;
-		b = 0;
+		H=120;//绿色
 		break;
 	case 5:
-		r = 0;//青色
-		g = 255;
-		b = 255;
+		H=180;//青色
 		break;
 	case 6:
-		r = 0;//蓝色
-		g = 0;
-		b = 255;
+		H=240;//蓝色
 		break;
 	case 7:
-		r = 128;//紫色
-		g = 0;
-		b = 255;
+		H=270;//紫色
 		break;
 	default:
 		flag = 0;
@@ -265,8 +321,20 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 	}
 	if (flag)
 	{
-		setfillcolor(RGB(r, g, b));
-		solidcircle(circle_x, circle_y, r_bead - 1);
+		//画棋子(纯色)
+		setfillcolor(HSVtoRGB(H, S, V));
+		solidcircle(circle_x, circle_y, r_bead-1);
+		
+		//// 画棋子(中间偏白色) (渐变) (遍历很卡)
+		//for (int i = 0; i < r_bead - 1; i++)
+		//{
+		//	for (int r = r_bead-1; r > 0; r--)
+		//	{
+		//		S-=0.45f/r_bead;	//改变S的值
+		//		setlinecolor(HSVtoRGB(H,S,V));
+		//		circle(circle_x, circle_y, r);
+		//	}
+		//}
 	}
 }
 
@@ -285,7 +353,7 @@ inline void Visual_interface::draw_root_window()
 	const char* title = "五子连珠";
 	SetWindowText(hwnd, title);//修改窗口标题
 	IMAGE bk;//背景
-	const char* bk_route = "image/bk.png";
+	const char* bk_route = "bk.png";
 	loadimage(&bk, bk_route, width, height);
 	putimage(0, 0, &bk);
 	draw_line();//画出分隔线
