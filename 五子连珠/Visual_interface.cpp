@@ -285,7 +285,7 @@ inline void Visual_interface::game_over()
 
 inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标 
 {
-	//const int pi = 3.14159; //用于画渐变,不一定用得上
+	
 	int flag = 1;
 	HWND hwnd;
 	hwnd = GetHWnd();
@@ -328,9 +328,10 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 		//// 画棋子(中间偏白色) (渐变) (遍历很卡)
 		//for (int i = 0; i < r_bead - 1; i++)
 		//{
-		//	for (int r = r_bead-1; r > 0; r--)
+		//	for (int r = r_bead; r > 0; r-=4)
 		//	{
-		//		S-=0.45f/r_bead;	//改变S的值
+		//		setlinestyle(PS_SOLID, 4);		// 设置线宽
+		//		S-=0.9f/r_bead;	//改变S的值
 		//		setlinecolor(HSVtoRGB(H,S,V));
 		//		circle(circle_x, circle_y, r);
 		//	}
