@@ -25,13 +25,14 @@ private:
 
 };
 
-const int lattice_side_length = 60;//格子边长 需要9*9的棋盘
+const int lattice_side_length = 70;//格子边长 需要9*9的棋盘
 const int lattice_num = 9;//9*9的格子
-const int height_score = 60;//下方积分栏的高度
-const int width_menu = 120;//右侧菜单栏宽度
+const int height_score = 70;//下方积分栏的高度
+const int width_menu = 250;//右侧菜单栏宽度
 const int width = lattice_side_length * lattice_num + width_menu;
 const int height = lattice_side_length * lattice_num + height_score;
 const int r_bead = lattice_side_length / 2;//棋子半径为格子边长的一半
+const string blank = "                                                                                 ";
 
 /*
 颜色
@@ -96,6 +97,7 @@ inline void Visual_interface::mouse_catching()
 
 	while (1)
 	{
+	start:
 		if (MouseHit())//检测到鼠标事件
 		{
 			m = GetMouseMsg();
@@ -105,6 +107,7 @@ inline void Visual_interface::mouse_catching()
 			switch (m.uMsg)
 			{
 			case WM_LBUTTONDOWN: //按下左键
+				cout << "选择起始位置" << endl;
 				cout << "已选择起始棋子" << endl;
 				cout << "鼠标坐标为: (" << m.x << "," << m.y << ")" << endl;
 				cout << "选择的棋子坐标为: (" << x << "," << y << ")" << endl;
@@ -120,8 +123,15 @@ inline void Visual_interface::mouse_catching()
 					cout << "起始位置无效,重新选择" << endl;
 					break;
 				}
+			case WM_MOUSEMOVE://移动鼠标
+				/*cout << "move1" << endl;
+				cout << "flag1 = " << flag1 << endl;
+				cout << "flag2 = " << flag2 << endl;*/
+				break;
 			default:
-				cout << "other" << endl;
+				/*cout << "other1" << endl;
+				cout << "flag1 = " << flag1 << endl;
+				cout << "flag2 = " << flag2 << endl;*/
 				break;
 			}
 		}
@@ -130,46 +140,64 @@ inline void Visual_interface::mouse_catching()
 	}
 
 
-	cout << "选择终止位置: " << endl;
-re:
-	MOUSEMSG m2 = GetMouseMsg();
-	if (MouseHit())//检测到鼠标事件
+	while (1)
 	{
-		m2 = GetMouseMsg();
-		x = m2.x / lattice_side_length + 1;
-		y = m2.y / lattice_side_length + 1;
-		x2 = y; y2 = x;
-		switch (m2.uMsg)
+		MOUSEMSG m2;
+		if (MouseHit())//检测到鼠标事件
 		{
-		case WM_LBUTTONDOWN: //按下左键
-			cout << "已选择终止位置" << endl;
-			cout << "鼠标坐标为: (" << m2.x << "," << m2.y << ")" << endl;
-			cout << "终止位置坐标为: (" << x << "," << y << ")" << endl;
-			cout << "终止位置颜色为: (" << color[game.get_color(x2, y2)] << ")" << endl;
-			if (x2 <= 9 && y2 <= 9 && color[game.get_color(x2, y2)] == "空白")
+			m2 = GetMouseMsg();
+			x = m2.x / lattice_side_length + 1;
+			y = m2.y / lattice_side_length + 1;
+			x2 = y; y2 = x;
+			switch (m2.uMsg)
 			{
-				game.loc[2] = x2; game.loc[3] = y2;
-				flag2 = 1;
+			case WM_LBUTTONDOWN: //按下左键
+				cout << "选择终止位置: " << endl;
+				cout << "已选择终止位置" << endl;
+				cout << "鼠标坐标为: (" << m2.x << "," << m2.y << ")" << endl;
+				cout << "终止位置坐标为: (" << x << "," << y << ")" << endl;
+				cout << "终止位置颜色为: (" << color[game.get_color(x2, y2)] << ")" << endl;
+				if (x2 <= 9 && y2 <= 9 && color[game.get_color(x2, y2)] == "空白")
+				{
+					game.loc[2] = x2; game.loc[3] = y2;
+					flag2 = 1;
+					break;
+				}
+				else
+				{
+					cout << "终止位置无效,回到选择起始棋子" << endl;
+					flag1 = 0;
+					flag2 = 0;
+					/*cout << "flag1 = " << flag1 << endl;
+					cout << "flag2 = " << flag2 << endl;*/
+					break;
+				}
+			case WM_MOUSEMOVE://移动鼠标
+				/*cout << "move2" << endl;*/
+				flag2 = -1;
+				break;
+			case WM_RBUTTONDOWN:
+				cout << "Selection canceled." << endl;
+				flag1 = 0;
+				flag2 = 0;
+				goto start;
+			default:
+				/*cout << "other2" << endl;*/
+				flag2 = -1;
 				break;
 			}
-			else
-			{
-				cout << "终止位置无效,回到选择起始棋子" << endl;
-				break;
-			}
-		default:
-			cout << "other" << endl;
-			flag2 = -1;
-			break;
+		}
+		if (flag1 == 1 && flag2 == 1)
+		{
+			cout << "执行移动函数" << endl;
+			game.move(game.loc);
+			return;
+		}
+		if (flag2 == 0)
+		{
+			goto start;
 		}
 	}
-	if (flag1 == 1 && flag2 == 1)
-	{
-		cout << "执行移动函数" << endl;
-		game.move(game.loc);
-	}
-	if (flag2 == -1)
-		goto re;
 }
 
 
