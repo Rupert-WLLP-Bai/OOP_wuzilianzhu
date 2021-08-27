@@ -16,7 +16,7 @@ int main_base()
 	while (1)
 	{
 
-		eliminate(&game, 1,1,"all");//消去系统自动生成的棋子
+		//eliminate(&game, 1,1,"all");//消去系统自动生成的棋子
 		system("cls");
 		game.show();
 		if (game.game_over() == true)

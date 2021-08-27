@@ -9,7 +9,7 @@
 #include"eliminate.h"
 #include<iomanip>
 
-#define SLEEPTIME 0
+#define SLEEPTIME 20
 using namespace std;
 
 class Visual_interface
@@ -25,7 +25,8 @@ public:
 	void draw_score();//显示分数
 	void mouse_catching();//读取鼠标事件
 	bool search_path_and_move();//搜索路径 移动
-	void elinimate_and_score();
+	void eliminate_and_score();
+	void check_spawn();//检查系统生成的棋子能否自动消去
 	void game_over();
 	Checkerboard game;//game
 private:
@@ -35,11 +36,10 @@ private:
 const int lattice_side_length = 70;//格子边长 需要9*9的棋盘
 const int lattice_num = 9;//9*9的格子
 const int height_score = 70;//下方积分栏的高度
-const int width_menu = 250;//右侧菜单栏宽度
+const int width_menu = 0;//右侧菜单栏宽度
 const int width = lattice_side_length * lattice_num + width_menu;
 const int height = lattice_side_length * lattice_num + height_score;
 const int r_bead = lattice_side_length / 2;//棋子半径为格子边长的一半
-const string blank = "                                                                                 ";
 
 /*
 颜色
@@ -264,10 +264,15 @@ inline bool Visual_interface::search_path_and_move()
 	}
 }
 
-inline void Visual_interface::elinimate_and_score()
+inline void Visual_interface::eliminate_and_score()
 {
 	int flag = eliminate(&game, game.loc[2], game.loc[3]);//消去并加分
 	game.add(flag);
+}
+
+inline void Visual_interface::check_spawn()
+{
+	eliminate(&game,"all");
 }
 
 inline void Visual_interface::game_over()
@@ -277,6 +282,8 @@ inline void Visual_interface::game_over()
 		int ok = MessageBox(GetHWnd(), "游戏结束,点击按钮退出游戏", "Oops", MB_OK);
 		if (ok == IDOK)
 		{
+			string text = "最终得分为: " + to_string(game.get_score());
+			MessageBox(GetHWnd(),text.c_str() , "Oops", MB_OK);
 			cleardevice();
 			exit(-2);
 		}

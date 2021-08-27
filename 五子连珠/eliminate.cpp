@@ -1,5 +1,6 @@
 #include"eliminate.h"
 #include"checkerboard.h"
+#include<iostream>
 
 void eliminate_1(Checkerboard A, int x, int y, int* left, int* right) //ĞÎ²ÎÎªÆåÅÌ,ÖÕµã×ø±ê,ËÑË÷ºáÏò³¤¶È
 {
@@ -73,7 +74,7 @@ void eliminate_2(Checkerboard A, int x, int y, int* up, int* down)//ĞÎ²ÎÎªÆåÅÌ,Ö
 		if (A.get_color(x - 1, y) == color)
 		{
 			u++;
-			x++;
+			x--;
 		}
 		else
 			break;
@@ -169,146 +170,156 @@ void eliminate_4(Checkerboard A, int x, int y, int* WN, int* ES)//ĞÎ²ÎÎªÆåÅÌ,ÖÕµ
 	*ES = es;
 }
 
-int eliminate(Checkerboard *A, int x, int y,const char *prompt)//×ÛºÏËÄ¸öº¯Êı½øĞĞÏûÈ¥
+int eliminate(Checkerboard* A, int x, int y, const char* prompt)//×ÛºÏËÄ¸öº¯Êı½øĞĞÏûÈ¥
 {
 	int flag = 0;//Ä¬ÈÏÎ´ÏûÈ¥
-	if (prompt == "all")//ÓÃÓÚ¼ì²éÏµÍ³×Ô¶¯Éú³ÉµÄÆå×ÓÊÇ·ñ¿ÉÏûÈ¥
+	int start_x = x;
+	int start_y = y;
+	int E = 0;//ÏûÈ¥ÊıÁ¿,ÓÃÓÚ¼Æ·Ö
+	int left=0, right=0, up=0, down=0;
+	int EN=0, WS=0;//¶«±±,Î÷ÄÏ·½Ïò
+	int WN=0, ES=0;//Î÷±±,¶«ÄÏ·½Ïò
+	int num[4];//ËÄ¸ö·½ÏòÏûÈ¥ÊıÁ¿
+	eliminate_1(*A, x, y, &left, &right);
+	eliminate_2(*A, x, y, &up, &down);
+	eliminate_3(*A, x, y, &EN, &WS);
+	eliminate_4(*A, x, y, &WN, &ES);
+	num[0] = left + right; num[1] = up + down; num[2] = EN + WS; num[3] = WN + ES;
+	cout << "ºáÏò³¤¶ÈÎª: " << num[0] + 1 << "  ×ó·½³¤¶ÈÎª:   " << left << "  ÓÒ·½³¤¶ÈÎª:   " << right << endl;
+	cout << "ÊúÏò³¤¶ÈÎª: " << num[1] + 1 << "  ÉÏ·½³¤¶ÈÎª:   " << up << "  ÏÂ·½³¤¶ÈÎª:   " << down << endl;
+	cout << "Æ²Ïò³¤¶ÈÎª: " << num[2] + 1 << "  ¶«±±Ïò³¤¶ÈÎª: " << EN << "  Î÷ÄÏÏò³¤¶ÈÎª: " << WS << endl;
+	cout << "ŞàÏò³¤¶ÈÎª: " << num[3] + 1 << "  ¶«ÄÏÏò³¤¶ÈÎª: " << ES << "  Î÷±±Ïò³¤¶ÈÎª: " << WN << endl;
+	if (num[0] >= 4)
 	{
-		for (int i = 1; i <= 9; i++)
-		{
-			for (int j = 1; j <= 9; j++)
-			{
-				x = i;
-				y = j;
-				int start_x = x;
-				int start_y = y;
-				int E = 0;//ÏûÈ¥ÊıÁ¿,ÓÃÓÚ¼Æ·Ö
-				int left, right, up, down;
-				int EN, WS;//¶«±±,Î÷ÄÏ·½Ïò
-				int WN, ES;//Î÷±±,¶«ÄÏ·½Ïò
-				int num[4];//ËÄ¸ö·½ÏòÏûÈ¥ÊıÁ¿
-				eliminate_1(*A, x, y, &left, &right);
-				eliminate_2(*A, x, y, &up, &down);
-				eliminate_3(*A, x, y, &EN, &WS);
-				eliminate_4(*A, x, y, &WN, &ES);
-				num[0] = left + right; num[1] = up + down; num[2] = EN + WS; num[3] = WN + ES;
-				if (num[0] >= 4)
-				{
-					for (int i = y - left; i <= y + right; i++)
-						(*A).set(x, i, 0);//blank
-					E += num[0];
-					x = start_x;
-					y = start_y;
-					flag = 1;
-				}
-				if (num[1] >= 4)
-				{
-					for (int i = x - up; i <= x + down; i++)
-						(*A).set(i, y, 0);//blank
-					E += num[1];
-					x = start_x;
-					y = start_y;
-					flag = 1;
-				}
-				if (num[2] >= 4)
-				{
-					int i = 0;
-					while (i != num[2] + 1)
-					{
-						(*A).set(x - EN, y + EN, 0);//blank
-						i++;
-						x++;
-						y--;
-					}
-					E += num[2];
-					x = start_x;
-					y = start_y;
-					flag = 1;
-				}
-				if (num[3] >= 4)
-				{
-					int i = 0;
-					while (i != num[3] + 1)
-					{
-						(*A).set(x - WN, y - WN, 0);//blank
-						i++;
-						x++;
-						y++;
-					}
-					E += num[3];
-					x = start_x;
-					y = start_y;
-					flag = 1;
-				}
-			}
-		}
-		return flag;
+		for (int i = y - left; i <= y + right; i++)
+			(*A).set(x, i, 0);//blank
+		E += num[0];
+		x = start_x;
+		y = start_y;
+		flag = 1;
 	}
-	else
+	if (num[1] >= 4)
 	{
-		int start_x = x;
-		int start_y = y;
-		int E = 0;//ÏûÈ¥ÊıÁ¿,ÓÃÓÚ¼Æ·Ö
-		int left, right, up, down;
-		int EN, WS;//¶«±±,Î÷ÄÏ·½Ïò
-		int WN, ES;//Î÷±±,¶«ÄÏ·½Ïò
-		int num[4];//ËÄ¸ö·½ÏòÏûÈ¥ÊıÁ¿
-		eliminate_1(*A, x, y, &left, &right);
-		eliminate_2(*A, x, y, &up, &down);
-		eliminate_3(*A, x, y, &EN, &WS);
-		eliminate_4(*A, x, y, &WN, &ES);
-		num[0] = left + right; num[1] = up + down; num[2] = EN + WS; num[3] = WN + ES;
-		if (num[0] >= 4)
-		{
-			for (int i = y - left; i <= y + right; i++)
-				(*A).set(x, i, 0);//blank
-			E += num[0];
-			x = start_x;
-			y = start_y;
-			flag = 1;
-		}
-		if (num[1] >= 4)
-		{
-			for (int i = x - up; i <= x + down; i++)
-				(*A).set(i, y, 0);//blank
-			E += num[1];
-			x = start_x;
-			y = start_y;
-			flag = 1;
-		}
-		if (num[2] >= 4)
-		{
-			int i = 0;
-			while (i != num[2] + 1)
-			{
-				(*A).set(x - EN, y + EN, 0);//blank
-				i++;
-				x++;
-				y--;
-			}
-			E += num[2];
-			x = start_x;
-			y = start_y;
-			flag = 1;
-		}
-		if (num[3] >= 4)
-		{
-			int i = 0;
-			while (i != num[3] + 1)
-			{
-				(*A).set(x - WN, y - WN, 0);//blank
-				i++;
-				x++;
-				y++;
-			}
-			E += num[3];
-			x = start_x;
-			y = start_y;
-			flag = 1;
-		}
-		if (flag == 1)
-			E += 1;
-		(*A).score_add(2 * E);
+		for (int i = x - up; i <= x + down; i++)
+			(*A).set(i, y, 0);//blank
+		E += num[1];
+		x = start_x;
+		y = start_y;
+		flag = 1;
 	}
+	if (num[2] >= 4)
+	{
+		int i = 0;
+		while (i != num[2] + 1)
+		{
+			(*A).set(x - EN, y + EN, 0);//blank
+			i++;
+			x++;
+			y--;
+		}
+		E += num[2];
+		x = start_x;
+		y = start_y;
+		flag = 1;
+	}
+	if (num[3] >= 4)
+	{
+		int i = 0;
+		while (i != num[3] + 1)
+		{
+			(*A).set(x - WN, y - WN, 0);//blank
+			i++;
+			x++;
+			y++;
+		}
+		E += num[3];
+		x = start_x;
+		y = start_y;
+		flag = 1;
+	}
+	if (flag == 1)
+		E += 1;
+
+	(*A).score_add(2 * E);
 	return flag;
+}
+
+int eliminate(Checkerboard* A, const char* prompt)
+{
+	for(int x =1;x<10;x++)
+		for (int y = 0; y < 10; y++)
+		{
+			int flag = 0;//Ä¬ÈÏÎ´ÏûÈ¥
+			int start_x = x;
+			int start_y = y;
+			int E = 0;//ÏûÈ¥ÊıÁ¿,ÓÃÓÚ¼Æ·Ö
+			int left=0, right=0, up=0, down=0;
+			int EN=0, WS=0;//¶«±±,Î÷ÄÏ·½Ïò
+			int WN=0, ES=0;//Î÷±±,¶«ÄÏ·½Ïò
+			int num[4];//ËÄ¸ö·½ÏòÏûÈ¥ÊıÁ¿
+			eliminate_1(*A, x, y, &left, &right);
+			eliminate_2(*A, x, y, &up, &down);
+			eliminate_3(*A, x, y, &EN, &WS);
+			eliminate_4(*A, x, y, &WN, &ES);
+			num[0] = left + right; num[1] = up + down; num[2] = EN + WS; num[3] = WN + ES;
+			/*cout << "ºáÏò³¤¶ÈÎª: " << num[0] + 1 << "  ×ó·½³¤¶ÈÎª:   " << left << "  ÓÒ·½³¤¶ÈÎª:   " << right << endl;
+			cout << "ÊúÏò³¤¶ÈÎª: " << num[1] + 1 << "  ÉÏ·½³¤¶ÈÎª:   " << up << "  ÏÂ·½³¤¶ÈÎª:   " << down << endl;
+			cout << "Æ²Ïò³¤¶ÈÎª: " << num[2] + 1 << "  ¶«±±Ïò³¤¶ÈÎª: " << EN << "  Î÷ÄÏÏò³¤¶ÈÎª: " << WS << endl;
+			cout << "ŞàÏò³¤¶ÈÎª: " << num[3] + 1 << "  ¶«ÄÏÏò³¤¶ÈÎª: " << ES << "  Î÷±±Ïò³¤¶ÈÎª: " << WN << endl;*/
+			if (num[0] >= 4)
+			{
+				for (int i = y - left; i <= y + right; i++)
+					(*A).set(x, i, 0);//blank
+				E += num[0];
+				x = start_x;
+				y = start_y;
+				flag = 1;
+			}
+			if (num[1] >= 4)
+			{
+				for (int i = x - up; i <= x + down; i++)
+					(*A).set(i, y, 0);//blank
+				E += num[1];
+				x = start_x;
+				y = start_y;
+				flag = 1;
+			}
+			if (num[2] >= 4)
+			{
+				int i = 0;
+				while (i != num[2] + 1)
+				{
+					(*A).set(x - EN, y + EN, 0);//blank
+					i++;
+					x++;
+					y--;
+				}
+				E += num[2];
+				x = start_x;
+				y = start_y;
+				flag = 1;
+			}
+			if (num[3] >= 4)
+			{
+				int i = 0;
+				while (i != num[3] + 1)
+				{
+					(*A).set(x - WN, y - WN, 0);//blank
+					i++;
+					x++;
+					y++;
+				}
+				E += num[3];
+				x = start_x;
+				y = start_y;
+				flag = 1;
+			}
+			if (flag == 1)
+			{
+				E += 1;
+				cout << "ÏµÍ³×Ô¶¯Éú³ÉµÄÆå×ÓÒÑÏûÈ¥,²»¼ÆÈë·ÖÊı" << endl;
+			}
+		}
+	return 0;
+	
 }

@@ -71,9 +71,6 @@
     <ClCompile Include="main_base.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="path.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -81,6 +78,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Visual_interface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="path.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
