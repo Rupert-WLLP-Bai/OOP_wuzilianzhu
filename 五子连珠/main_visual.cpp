@@ -6,15 +6,22 @@
 #include"Visual_interface.cpp"
 using namespace std;
 
+inline void start()
+{
+	int val = MessageBox(GetHWnd(), "选择是否显示Console", "Before Start", MB_YESNO);
+	if (val == IDYES)
+		initgraph(width, height, SHOWCONSOLE);
+	else
+		initgraph(width, height);
+	setlinestyle(PS_SOLID, 2);		// 设置线宽为 2
+}
+
 int main_visual()
 {
 	Visual_interface Window;
-	initgraph(width, height, SHOWCONSOLE);
-	setlinestyle(PS_SOLID, 2);		// 设置线宽为 2
+	start();
 	while (1)
 	{
-		//eliminate(&Window.game, 1, 1, "all");//检查系统生成的棋子是否能自动消去
-		
 		BeginBatchDraw();//防止回车时出现闪屏
 		Window.check_spawn();
 		Window.draw_root_window();
@@ -36,3 +43,4 @@ int main_visual()
 	}
 	return 0;
 }
+
