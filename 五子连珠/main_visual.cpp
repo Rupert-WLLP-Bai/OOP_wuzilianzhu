@@ -31,13 +31,11 @@ int main_visual()
 		Window.game_over();
 		Window.mouse_catching();
 		bool move = Window.search_path_and_move();
-		cout << "移动后数组状态为: " << endl;
-		Window.game.show();
 		if (move)
 		{
-			Window.eliminate_and_score();
-			cout << "发生消除,消除后数组状态为: " << endl;
+			cout << "移动后数组状态为: " << endl;
 			Window.game.show();
+			Window.eliminate_and_score();
 		}
 		cleardevice();
 	}

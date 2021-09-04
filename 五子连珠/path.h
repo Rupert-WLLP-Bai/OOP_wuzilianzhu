@@ -78,11 +78,10 @@ public:
 			return false;
 	}
 
+	void show_maze();//显示遍历后的迷宫
 	deque<Node> m_path; //存储最短路径
 
 private:
-
-
 	void searchPath(deque<Node>& path,
 		const Node& start, const Node& end, Checkerboard A)
 	{

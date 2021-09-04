@@ -9,7 +9,7 @@
 #include"eliminate.h"
 #include<iomanip>
 
-#define SLEEPTIME 20
+#define SLEEPTIME 10
 using namespace std;
 
 class Visual_interface
@@ -65,7 +65,7 @@ const int r_bead = lattice_side_length / 2;//棋子半径为格子边长的一半
 inline void Visual_interface::draw_line()
 {
 	HWND hwnd = GetHWnd();
-	setlinecolor(RGB(255, 127, 39));//分割线颜色设置
+	setlinecolor(RGB(255, 255, 255));//分割线颜色设置
 	for (int i = 0; i < 10; i++)//横竖线
 	{
 		line(0, i * lattice_side_length, width - width_menu, i * lattice_side_length);//横线
@@ -85,7 +85,7 @@ inline void Visual_interface::draw_score()//得分框
 	string text1 = "Score: ";
 	string score = to_string(game.get_score());//score
 	text = text1 + score;
-	settextcolor(RED);//字体颜色
+	settextcolor(WHITE);//字体颜色
 	setbkmode(TRANSPARENT);//背景透明
 	settextstyle(20, 0, "DejaVu Sans Mono");//字体设置
 	outtextxy(0, height - height_score, text.data());
@@ -114,11 +114,16 @@ inline void Visual_interface::mouse_catching()
 			switch (m.uMsg)
 			{
 			case WM_LBUTTONDOWN: //按下左键
-				cout << "选择起始位置" << endl;
-				cout << "已选择起始棋子" << endl;
-				cout << "鼠标坐标为: (" << m.x << "," << m.y << ")" << endl;
-				cout << "选择的棋子坐标为: (" << x << "," << y << ")" << endl;
-				cout << "选择的棋子颜色为: (" << color[game.get_color(x1, y1)] << ")" << endl;
+				if (x1 <= 9 && y1 <= 9)
+				{
+					cout << "选择起始位置" << endl;
+					cout << "已选择起始棋子" << endl;
+					cout << "鼠标坐标为: (" << m.x << "," << m.y << ")" << endl;
+					cout << "选择的棋子坐标为: (" << x << "," << y << ")" << endl;
+					cout << "选择的棋子颜色为: (" << color[game.get_color(x1, y1)] << ")" << endl;
+				}
+				else
+					continue;
 				if (x1 <= 9 && y1 <= 9 && color[game.get_color(x1, y1)] != "空白")
 				{
 					game.loc[0] = x1; game.loc[1] = y1;
@@ -159,11 +164,16 @@ inline void Visual_interface::mouse_catching()
 			switch (m2.uMsg)
 			{
 			case WM_LBUTTONDOWN: //按下左键
-				cout << "选择终止位置: " << endl;
-				cout << "已选择终止位置" << endl;
-				cout << "鼠标坐标为: (" << m2.x << "," << m2.y << ")" << endl;
-				cout << "终止位置坐标为: (" << x << "," << y << ")" << endl;
-				cout << "终止位置颜色为: (" << color[game.get_color(x2, y2)] << ")" << endl;
+				if (x2 <= 9 && y2 <= 9)
+				{
+					cout << "选择终止位置: " << endl;
+					cout << "已选择终止位置" << endl;
+					cout << "鼠标坐标为: (" << m2.x << "," << m2.y << ")" << endl;
+					cout << "终止位置坐标为: (" << x << "," << y << ")" << endl;
+					cout << "终止位置颜色为: (" << color[game.get_color(x2, y2)] << ")" << endl;
+				}
+				else
+					continue;
 				if (x2 <= 9 && y2 <= 9 && color[game.get_color(x2, y2)] == "空白")
 				{
 					game.loc[2] = x2; game.loc[3] = y2;
@@ -223,7 +233,7 @@ inline bool Visual_interface::search_path_and_move()
 		int num = 0;
 		path_search::Node start, end;//起始节点
 		start.m_x = game.loc[0]; start.m_y = game.loc[1];
-		end = route.m_path.front()+path_search::Node(1,1);
+		end = route.m_path.front() + path_search::Node(1, 1);
 		int location[4] = { start.m_x,start.m_y,end.m_x,end.m_y };
 		route.m_path.pop_front();
 		game.move(location);
@@ -234,7 +244,8 @@ inline bool Visual_interface::search_path_and_move()
 		FlushBatchDraw();
 		Sleep(SLEEPTIME);
 		cleardevice();
-		cout << "Moves: " << setw(2)<<++num <<" " << '(' << start.m_y << ','
+
+		cout << "Moves: " << setw(2) << ++num << " " << '(' << start.m_y << ','
 			<< start.m_x << ')' << "——>" << '(' << end.m_y << ','
 			<< end.m_x << ')' << endl;
 		// path每pop一次，更换一次起点终点，执行move，延时后重新画棋盘，直到path为空
@@ -257,6 +268,7 @@ inline bool Visual_interface::search_path_and_move()
 				<< start.m_x << ')' << "——>" << '(' << end.m_y << ','
 				<< end.m_x << ')' << endl;
 		}
+		route.show_maze();
 		////一次移动
 		//route.printPath();
 		//game.move(game.loc);
@@ -267,23 +279,28 @@ inline bool Visual_interface::search_path_and_move()
 inline void Visual_interface::eliminate_and_score()
 {
 	int flag = eliminate(&game, game.loc[2], game.loc[3]);//消去并加分
+	if (flag)
+	{
+		cout << endl << "发生消除,消除后数组状态为: " << endl;
+		game.show();
+	}
 	game.add(flag);
 }
 
 inline void Visual_interface::check_spawn()
 {
-	eliminate(&game,"all");
+	eliminate(&game, "all");
 }
 
 inline void Visual_interface::game_over()
 {
-	if (game.num_of_blank()==0)//flag==1 表示未消除 需要添加棋子 添加之前进行判断
+	if (game.num_of_blank() == 0)//flag==1 表示未消除 需要添加棋子 添加之前进行判断
 	{
 		int ok = MessageBox(GetHWnd(), "游戏结束,点击按钮退出游戏", "Oops", MB_OK);
 		if (ok == IDOK)
 		{
 			string text = "最终得分为: " + to_string(game.get_score());
-			MessageBox(GetHWnd(),text.c_str() , "Oops", MB_OK);
+			MessageBox(GetHWnd(), text.c_str(), "Oops", MB_OK);
 			cleardevice();
 			exit(-2);
 		}
@@ -292,35 +309,35 @@ inline void Visual_interface::game_over()
 
 inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标 
 {
-	
+
 	int flag = 1;
 	HWND hwnd;
 	hwnd = GetHWnd();
-	float H, S=1, V=1;//棋子颜色
+	float H, S = 1, V = 1;//棋子颜色
 	const int circle_y = x * lattice_side_length - r_bead;
 	const int circle_x = y * lattice_side_length - r_bead;//圆心坐标
 	switch (game.get_color(x, y))//获取棋子颜色
 	{
 	case 1:
-		H=0;//红色
+		H = 0;//红色
 		break;
 	case 2:
-		H=30;//橙色
+		H = 30;//橙色
 		break;
 	case 3:
-		H=60;//黄色
+		H = 60;//黄色
 		break;
 	case 4:
-		H=120;//绿色
+		H = 120;//绿色
 		break;
 	case 5:
-		H=180;//青色
+		H = 180;//青色
 		break;
 	case 6:
-		H=240;//蓝色
+		H = 240;//蓝色
 		break;
 	case 7:
-		H=270;//紫色
+		H = 270;//紫色
 		break;
 	default:
 		flag = 0;
@@ -330,8 +347,8 @@ inline void Visual_interface::draw_bead(int x, int y)//传入棋子坐标
 	{
 		//画棋子(纯色)
 		setfillcolor(HSVtoRGB(H, S, V));
-		solidcircle(circle_x, circle_y, r_bead-1);
-		
+		solidcircle(circle_x, circle_y, r_bead - 1);
+
 		//// 画棋子(中间偏白色) (渐变) (遍历很卡)
 		//for (int i = 0; i < r_bead - 1; i++)
 		//{
